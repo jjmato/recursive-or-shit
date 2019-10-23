@@ -8,7 +8,7 @@ export interface GenericData {
   options?: GenericData[];
 }
 
-const levels = ["number", "satir", "floor", "gate"];
+const levels = ["number", "stair", "floor", "gate"];
 const data = [
   { number: "n1", stair: "s1", floor: "f1", gate: "ga" },
   { number: "n1", stair: "s1", floor: "f1", gate: "gb" },
@@ -27,27 +27,30 @@ const toGenericData = (data: any[]): GenericData[] => {
   });
 };
 
-// console.log( toGenericData(
-//   forOwn.groupBy(data, "number")
-// ));
-
 const recursiveStuff = (data: GenericData[], i = 0) => {
-  console.log("iterando: ", i, levels[i], data);
   if (levels.length < i) return;
+  console.log("iterando: ", i, levels[i], data);
   i++;
 
-  return data.map( d => {
+  if (levels.length === i) {
+    return data;
+  }
+
+  const exit = data.map(d => {
+    // console.log(d.options);
+    const _group = forOwn.groupBy(d.options, levels[i]);
+    const r = toGenericData(_group);
     return {
-      ...d,
-      options: recursiveStuff(toGenericData(d.options), i)
+      id: d.id,
+      options: recursiveStuff(r, i)
     };
-  })
- 
+  });
+
+  return exit;
 };
 
 let ii = 0;
 const group = forOwn.groupBy(data, levels[ii]);
 const r = toGenericData(group);
-console.log( 
-  recursiveStuff(r, ii++)
-);
+ii++;
+console.log(recursiveStuff(r, ii));
