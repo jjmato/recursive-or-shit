@@ -49,8 +49,7 @@ const recursiveStuff = (data: GenericData[], i = 0) => {
   return exit;
 };
 
-let ii = 0;
-const group = forOwn.groupBy(data, levels[ii]);
+
+const group = forOwn.groupBy(data, levels[0]);
 const r = toGenericData(group);
-ii++;
-console.log(recursiveStuff(r, ii));
+console.log(recursiveStuff(r, 0));
